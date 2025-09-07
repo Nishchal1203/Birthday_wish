@@ -1,0 +1,236 @@
+import { motion, AnimatePresence } from "motion/react";
+import { useState } from "react";
+
+interface InteractiveCakeProps {
+  onSliced: () => void;
+}
+
+export function InteractiveCake({ onSliced }: InteractiveCakeProps) {
+  const [isSliced, setIsSliced] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [knifeClicked, setKnifeClicked] = useState(false);
+
+  const handleKnifeClick = () => {
+    if (!knifeClicked) {
+      setKnifeClicked(true);
+      // Start slicing animation
+      setTimeout(() => {
+        setIsSliced(true);
+        setShowConfetti(true);
+        // Hide confetti after animation
+        setTimeout(() => {
+          setShowConfetti(false);
+          onSliced();
+        }, 3000);
+      }, 1500);
+    }
+  };
+
+  // Generate confetti pieces
+  const confettiPieces = Array.from({ length: 50 }, (_, i) => ({
+    id: i,
+    color: i % 3 === 0 ? 'bg-soft-gold' : i % 3 === 1 ? 'bg-dusty-rose' : 'bg-pink-300',
+    left: Math.random() * 100,
+    delay: Math.random() * 2,
+    duration: 3 + Math.random() * 2,
+    size: 4 + Math.random() * 8
+  }));
+
+  return (
+    <div className="min-h-screen bg-creamy-white flex flex-col items-center justify-center p-8 relative overflow-hidden">
+      <motion.h2 
+        className="font-heading text-charcoal-grey text-center mb-16 text-3xl md:text-4xl lg:text-5xl"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+      >
+        Make a Wish!
+      </motion.h2>
+
+      <div className="relative">
+        {/* Cake Plate */}
+        <motion.div 
+          className="w-80 h-6 bg-white rounded-full shadow-lg mb-2"
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+        />
+
+        {/* Cake Base */}
+        <motion.div 
+          className="relative w-64 h-32 mx-auto"
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+        >
+          {/* Main cake body */}
+          <div className="w-full h-full bg-gradient-to-b from-pink-200 to-pink-300 rounded-t-3xl relative overflow-hidden">
+            {/* Frosting drips */}
+            <div className="absolute top-0 left-4 w-8 h-6 bg-white rounded-b-full opacity-90"></div>
+            <div className="absolute top-0 left-16 w-6 h-4 bg-white rounded-b-full opacity-90"></div>
+            <div className="absolute top-0 left-28 w-10 h-8 bg-white rounded-b-full opacity-90"></div>
+            <div className="absolute top-0 left-44 w-7 h-5 bg-white rounded-b-full opacity-90"></div>
+            <div className="absolute top-0 left-56 w-6 h-6 bg-white rounded-b-full opacity-90"></div>
+            
+            {/* Cake decoration */}
+            <div className="absolute inset-4 border-2 border-dusty-rose rounded-2xl opacity-50"></div>
+            
+            {/* Gold sprinkles */}
+            {Array.from({ length: 20 }).map((_, i) => (
+              <div
+                key={i}
+                className="absolute w-1 h-3 bg-soft-gold rounded-full animate-sparkle"
+                style={{
+                  left: `${Math.random() * 80 + 10}%`,
+                  top: `${Math.random() * 60 + 20}%`,
+                  transform: `rotate(${Math.random() * 360}deg)`,
+                  animationDelay: `${Math.random() * 2}s`
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Slice line (appears when slicing) */}
+          <AnimatePresence>
+            {knifeClicked && (
+              <motion.div
+                className="absolute top-0 left-1/3 w-0.5 h-full bg-charcoal-grey z-10"
+                initial={{ scaleY: 0, originY: 0 }}
+                animate={{ scaleY: 1 }}
+                transition={{ duration: 0.8, delay: 0.5 }}
+              />
+            )}
+          </AnimatePresence>
+
+          {/* Cake slice (appears after slicing) */}
+          <AnimatePresence>
+            {isSliced && (
+              <motion.div
+                className="absolute top-0 left-0 w-1/3 h-full bg-gradient-to-b from-pink-200 to-pink-300 rounded-tl-3xl origin-right"
+                initial={{ x: 0, rotate: 0 }}
+                animate={{ x: -20, rotate: -15 }}
+                transition={{ duration: 1, delay: 0.3 }}
+                style={{ transformOrigin: "right center" }}
+              >
+                {/* Inner cake layers visible */}
+                <div className="absolute inset-x-1 top-4 h-1 bg-yellow-200"></div>
+                <div className="absolute inset-x-1 top-8 h-1 bg-pink-400"></div>
+                <div className="absolute inset-x-1 top-12 h-1 bg-yellow-200"></div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
+
+        {/* Candles */}
+        <div className="absolute -top-16 left-1/2 transform -translate-x-1/2 flex space-x-4">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div key={i} className="relative">
+              {/* Candle */}
+              <motion.div 
+                className="w-2 h-12 bg-gradient-to-b from-yellow-200 to-yellow-400 rounded-full"
+                initial={{ scaleY: 0 }}
+                animate={{ scaleY: 1 }}
+                transition={{ duration: 0.5, delay: 0.8 + i * 0.1 }}
+              />
+              {/* Flame */}
+              <motion.div 
+                className="absolute -top-3 left-1/2 transform -translate-x-1/2 w-3 h-4 bg-gradient-to-t from-orange-400 to-yellow-300 rounded-full"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: 0.3, delay: 1.2 + i * 0.1 }}
+              >
+                <motion.div 
+                  className="w-full h-full bg-gradient-to-t from-orange-400 to-yellow-300 rounded-full"
+                  animate={{ 
+                    scaleY: [1, 1.2, 1],
+                    scaleX: [1, 0.8, 1]
+                  }}
+                  transition={{ 
+                    duration: 0.5,
+                    repeat: Infinity,
+                    repeatType: "reverse",
+                    delay: i * 0.2
+                  }}
+                />
+              </motion.div>
+              {/* Wick */}
+              <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-0.5 h-1 bg-gray-800"></div>
+            </div>
+          ))}
+        </div>
+
+        {/* Knife */}
+        <motion.div 
+          className="absolute -right-24 top-8 cursor-pointer"
+          initial={{ x: -50, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.8, delay: 1.5 }}
+          onClick={handleKnifeClick}
+          whileHover={!knifeClicked ? { scale: 1.05, rotate: -5 } : {}}
+          animate={knifeClicked ? { 
+            x: [0, -80, -80], 
+            y: [0, 0, 10],
+            rotate: [0, -45, -45]
+          } : { x: 0, y: 0, rotate: 0 }}
+          transition={knifeClicked ? { 
+            duration: 1.5, 
+            times: [0, 0.7, 1],
+            ease: "easeInOut"
+          } : {}}
+        >
+          {/* Knife blade */}
+          <div className="w-16 h-3 bg-gradient-to-r from-gray-300 to-gray-100 rounded-r-full relative">
+            <div className="absolute inset-y-1 left-0 right-4 bg-gradient-to-r from-gray-200 to-white rounded-r-full"></div>
+          </div>
+          {/* Knife handle */}
+          <div className="w-8 h-4 bg-gradient-to-b from-amber-600 to-amber-800 rounded-l-lg -ml-1 -mt-0.5"></div>
+          
+          {!knifeClicked && (
+            <motion.p 
+              className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 font-body text-muted-taupe text-sm whitespace-nowrap"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.7 }}
+              transition={{ duration: 0.8, delay: 2.5 }}
+            >
+              Tap to slice
+            </motion.p>
+          )}
+        </motion.div>
+      </div>
+
+      {/* Confetti */}
+      <AnimatePresence>
+        {showConfetti && confettiPieces.map((piece) => (
+          <motion.div
+            key={piece.id}
+            className={`absolute ${piece.color} rounded-full pointer-events-none`}
+            style={{
+              width: `${piece.size}px`,
+              height: `${piece.size}px`,
+              left: `${piece.left}%`,
+              top: '50%'
+            }}
+            initial={{ 
+              y: 0, 
+              rotate: 0, 
+              opacity: 0,
+              scale: 0 
+            }}
+            animate={{ 
+              y: [-100, 200],
+              rotate: [0, 720],
+              opacity: [0, 1, 1, 0],
+              scale: [0, 1, 1, 0],
+              x: [0, (Math.random() - 0.5) * 200]
+            }}
+            transition={{
+              duration: piece.duration,
+              delay: piece.delay,
+              ease: "easeOut"
+            }}
+          />
+        ))}
+      </AnimatePresence>
+    </div>
+  );
+}
