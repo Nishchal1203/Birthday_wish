@@ -7,8 +7,7 @@ export function BirthdayFinale() {
   const [hasError, setHasError] = useState(false);
   
   const birthdayText = "Happy Birthday, Somya!";
-  const personalMessage = "May your special day be filled with endless joy, beautiful memories, and all the love your heart can hold. You bring so much light into this world!";
-
+  const personalMessage = "May your special day be filled with endless joy and beautiful memories! ❤️";
   useEffect(() => {
     // Show parchment after main text animation
     const timer = setTimeout(() => {
@@ -147,7 +146,7 @@ export function BirthdayFinale() {
       >
         {/* Parchment background */}
         <div className="relative">
-          <div className="w-full h-64 sm:h-72 md:h-80 bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg shadow-2xl border-2 border-yellow-200 relative overflow-hidden">
+          <div className="w-full h-72 sm:h-80 md:h-96 bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg shadow-2xl border-2 border-yellow-200 relative overflow-hidden">
             {/* Parchment texture */}
             <div className="absolute inset-0 opacity-30">
               <div className="w-full h-full bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-lg"></div>
@@ -161,47 +160,49 @@ export function BirthdayFinale() {
           </div>
 
           {/* Message text overlay */}
-          <div className="absolute inset-4 sm:inset-6 md:inset-8 flex items-center justify-center p-2 sm:p-4">
+          <div className="absolute inset-4 sm:inset-6 md:inset-8 flex items-center justify-center p-3 sm:p-4">
             <motion.div 
-              className="w-full"
+              className="w-full h-full flex flex-col justify-center items-center"
               initial={{ opacity: 0 }}
               animate={showParchment ? { opacity: 1 } : {}}
               transition={{ duration: 2, delay: 0.5 }}
             >
-              <motion.p
-                className="font-script text-charcoal-grey text-sm sm:text-base md:text-lg lg:text-xl text-center leading-relaxed break-words hyphens-auto"
+              <motion.div
+                className="w-full max-w-full overflow-hidden border border-yellow-300 border-opacity-30 rounded-lg p-3 bg-white bg-opacity-20"
                 initial={{ opacity: 0 }}
                 animate={showParchment ? { opacity: 1 } : {}}
                 transition={{ duration: 1, delay: 1.5 }}
               >
-                {personalMessage}
-              </motion.p>
-              
-              {/* Blinking cursor effect */}
-              <motion.span
-                className="inline-block w-0.5 h-6 bg-charcoal-grey ml-1"
-                initial={{ opacity: 0 }}
-                animate={showParchment ? { 
-                  opacity: [0, 1, 1, 0]
-                } : {}}
-                transition={{ 
-                  duration: 1,
-                  delay: 2.5,
-                  repeat: 3,
-                  repeatType: "loop"
-                }}
-              />
+                <p className="font-script text-charcoal-grey text-xs sm:text-sm md:text-base lg:text-lg text-center leading-relaxed break-words hyphens-auto px-2 max-h-full overflow-y-auto">
+                  {personalMessage}
+                </p>
+                
+                {/* Blinking cursor effect */}
+                <motion.span
+                  className="inline-block w-0.5 h-4 sm:h-5 md:h-6 bg-charcoal-grey ml-1"
+                  initial={{ opacity: 0 }}
+                  animate={showParchment ? { 
+                    opacity: [0, 1, 1, 0]
+                  } : {}}
+                  transition={{ 
+                    duration: 1,
+                    delay: 2.5,
+                    repeat: 3,
+                    repeatType: "loop"
+                  }}
+                />
+              </motion.div>
             </motion.div>
           </div>
 
           {/* Signature area */}
           <motion.div 
-            className="absolute bottom-2 right-4 sm:bottom-4 sm:right-8"
+            className="absolute bottom-3 right-4 sm:bottom-4 sm:right-6 md:bottom-6 md:right-8"
             initial={{ opacity: 0 }}
             animate={showParchment ? { opacity: 1 } : {}}
             transition={{ duration: 1, delay: 4 }}
           >
-            <p className="font-script text-muted-taupe text-xs sm:text-sm md:text-lg">
+            <p className="font-script text-muted-taupe text-xs sm:text-sm md:text-base lg:text-lg">
               With all my love and wishes ❤️ Nischal
             </p>
           </motion.div>
