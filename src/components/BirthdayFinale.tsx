@@ -1,11 +1,13 @@
+import React from "react";
 import { motion } from "motion/react";
 import { useState, useEffect } from "react";
 
 export function BirthdayFinale() {
   const [showParchment, setShowParchment] = useState(false);
+  const [hasError, setHasError] = useState(false);
   
   const birthdayText = "Happy Birthday, Somya!";
-  const personalMessage = "";
+  const personalMessage = "May your special day be filled with endless joy, beautiful memories, and all the love your heart can hold. You bring so much light into this world!";
 
   useEffect(() => {
     // Show parchment after main text animation
@@ -16,8 +18,23 @@ export function BirthdayFinale() {
     return () => clearTimeout(timer);
   }, []);
 
+  // Error boundary for the component
+  if (hasError) {
+    return (
+      <div className="min-h-screen bg-creamy-white flex flex-col items-center justify-center p-8">
+        <h1 className="font-heading text-charcoal-grey text-4xl mb-4">Happy Birthday, Somya!</h1>
+        <p className="font-body text-muted-taupe text-lg text-center">
+          May your special day be filled with endless joy and beautiful memories! ❤️
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-creamy-white flex flex-col items-center justify-center p-8 relative overflow-hidden">
+    <div 
+      className="min-h-screen bg-creamy-white flex flex-col items-center justify-center p-8 relative overflow-hidden"
+      onError={() => setHasError(true)}
+    >
       {/* Background decorative elements */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Floating sparkles */}
@@ -130,39 +147,18 @@ export function BirthdayFinale() {
       >
         {/* Parchment background */}
         <div className="relative">
-          <svg
-            viewBox="0 0 400 300"
-            className="w-full max-w-2xl drop-shadow-2xl"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            {/* Paper texture gradient */}
-            <defs>
-              <linearGradient id="parchment" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#FFF8DC" />
-                <stop offset="50%" stopColor="#F5F5DC" />
-                <stop offset="100%" stopColor="#FFFACD" />
-              </linearGradient>
-              <filter id="roughPaper">
-                <feTurbulence baseFrequency="0.04" numOctaves="5" result="noise" />
-                <feDisplacementMap in="SourceGraphic" in2="noise" scale="1" />
-              </filter>
-            </defs>
-            
-            {/* Parchment shape */}
-            <path
-              d="M20 30 Q15 20 25 15 L370 15 Q385 20 380 30 L380 260 Q385 275 375 280 L25 280 Q10 275 15 260 Z"
-              fill="url(#parchment)"
-              stroke="#D4AF37"
-              strokeWidth="1"
-              filter="url(#roughPaper)"
-            />
+          <div className="w-full max-w-2xl h-80 bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg shadow-2xl border-2 border-yellow-200 relative overflow-hidden">
+            {/* Parchment texture */}
+            <div className="absolute inset-0 opacity-30">
+              <div className="w-full h-full bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-lg"></div>
+            </div>
             
             {/* Decorative corners */}
-            <circle cx="50" cy="50" r="3" fill="var(--soft-gold)" opacity="0.3" />
-            <circle cx="350" cy="50" r="3" fill="var(--soft-gold)" opacity="0.3" />
-            <circle cx="350" cy="250" r="3" fill="var(--soft-gold)" opacity="0.3" />
-            <circle cx="50" cy="250" r="3" fill="var(--soft-gold)" opacity="0.3" />
-          </svg>
+            <div className="absolute top-4 left-4 w-2 h-2 bg-yellow-400 rounded-full opacity-60"></div>
+            <div className="absolute top-4 right-4 w-2 h-2 bg-yellow-400 rounded-full opacity-60"></div>
+            <div className="absolute bottom-4 right-4 w-2 h-2 bg-yellow-400 rounded-full opacity-60"></div>
+            <div className="absolute bottom-4 left-4 w-2 h-2 bg-yellow-400 rounded-full opacity-60"></div>
+          </div>
 
           {/* Message text overlay */}
           <div className="absolute inset-8 flex items-center justify-center p-4">
@@ -210,7 +206,6 @@ export function BirthdayFinale() {
             </p>
           </motion.div>
         </div>
-
         {/* Magical sparkles around parchment */}
         {showParchment && Array.from({ length: 12 }).map((_, i) => (
           <motion.div
