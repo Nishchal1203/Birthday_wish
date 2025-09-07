@@ -19,7 +19,7 @@ export function PhotoGallery({ onComplete }: PhotoGalleryProps) {
     {
       id: 1,
       url: "https://images.unsplash.com/photo-1638644074459-9067407b72a3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmcmllbmRzJTIwbGF1Z2hpbmclMjB0b2dldGhlcnxlbnwxfHx8fDE3NTcyNjcyNTJ8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-      caption: "That day we couldn't stop laughing"
+      caption: "As always with you"
     },
     {
       id: 2,
