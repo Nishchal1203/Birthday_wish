@@ -10,11 +10,11 @@ interface InteractiveCakeProps {
 export function InteractiveCake({ onSliced }: InteractiveCakeProps) {
   const [isSliced, setIsSliced] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
-  const [knifeClicked, setKnifeClicked] = useState(false);
+  const [isSlicing, setIsSlicing] = useState(false);
 
-  const handleKnifeClick = () => {
-    if (!knifeClicked) {
-      setKnifeClicked(true);
+  const handleCakeTap = () => {
+    if (!isSliced && !isSlicing) {
+      setIsSlicing(true);
       // Start slicing animation
       setTimeout(() => {
         setIsSliced(true);
@@ -24,7 +24,34 @@ export function InteractiveCake({ onSliced }: InteractiveCakeProps) {
           setShowConfetti(false);
           onSliced();
         }, 2000);
-      }, 1500);
+      }, 800);
+    }
+  };
+
+  // Handle swipe gesture for mobile
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (!isSliced && !isSlicing) {
+      const touch = e.touches[0];
+      const startX = touch.clientX;
+      const startY = touch.clientY;
+      
+      const handleTouchEnd = (e: TouchEvent) => {
+        const touch = e.changedTouches[0];
+        const endX = touch.clientX;
+        const endY = touch.clientY;
+        
+        const deltaX = endX - startX;
+        const deltaY = endY - startY;
+        
+        // Check if it's a horizontal swipe (more horizontal than vertical)
+        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 30) {
+          handleCakeTap();
+        }
+        
+        document.removeEventListener('touchend', handleTouchEnd);
+      };
+      
+      document.addEventListener('touchend', handleTouchEnd);
     }
   };
 
@@ -69,10 +96,22 @@ export function InteractiveCake({ onSliced }: InteractiveCakeProps) {
 
         {/* Cake Base */}
         <motion.div 
-          className="relative w-64 h-32 mx-auto"
+          className="relative w-64 h-32 mx-auto cursor-pointer"
           initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
+          animate={{ 
+            scale: isSlicing ? 1.05 : 1, 
+            opacity: 1,
+            rotate: isSlicing ? [0, -2, 2, 0] : 0
+          }}
+          transition={{ 
+            duration: 0.8, 
+            delay: 0.5,
+            rotate: isSlicing ? { duration: 0.3, repeat: 2 } : {}
+          }}
+          onClick={handleCakeTap}
+          onTouchStart={handleTouchStart}
+          whileHover={!isSliced && !isSlicing ? { scale: 1.02 } : {}}
+          whileTap={!isSliced && !isSlicing ? { scale: 0.98 } : {}}
         >
           {/* Main cake body */}
           <div className="w-full h-full bg-gradient-to-b from-pink-200 to-pink-300 rounded-t-3xl relative overflow-hidden">
@@ -103,12 +142,12 @@ export function InteractiveCake({ onSliced }: InteractiveCakeProps) {
 
           {/* Slice line (appears when slicing) */}
           <AnimatePresence>
-            {knifeClicked && (
+            {isSlicing && (
               <motion.div
                 className="absolute top-0 left-1/3 w-0.5 h-full bg-charcoal-grey z-10"
                 initial={{ scaleY: 0, originY: 0 }}
                 animate={{ scaleY: 1 }}
-                transition={{ duration: 0.8, delay: 0.5 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
               />
             )}
           </AnimatePresence>
@@ -170,42 +209,23 @@ export function InteractiveCake({ onSliced }: InteractiveCakeProps) {
           ))}
         </div>
 
-        {/* Knife */}
-        <motion.div 
-          className="absolute -right-24 top-8 cursor-pointer"
-          initial={{ x: -50, opacity: 0 }}
-          animate={knifeClicked ? { 
-            x: [0, -80, -80], 
-            y: [0, 0, 10],
-            rotate: [0, -45, -45],
-            opacity: 1
-          } : { x: 0, y: 0, rotate: 0, opacity: 1 }}
-          transition={knifeClicked ? { 
-            duration: 1.5, 
-            times: [0, 0.7, 1],
-            ease: "easeInOut"
-          } : { duration: 0.8, delay: 1.5 }}
-          onClick={handleKnifeClick}
-          whileHover={!knifeClicked ? { scale: 1.05, rotate: -5 } : {}}
-        >
-          {/* Knife blade */}
-          <div className="w-16 h-3 bg-gradient-to-r from-gray-300 to-gray-100 rounded-r-full relative">
-            <div className="absolute inset-y-1 left-0 right-4 bg-gradient-to-r from-gray-200 to-white rounded-r-full"></div>
-          </div>
-          {/* Knife handle */}
-          <div className="w-8 h-4 bg-gradient-to-b from-amber-600 to-amber-800 rounded-l-lg -ml-1 -mt-0.5"></div>
-          
-          {!knifeClicked && (
+        {/* Tap instruction */}
+        {!isSliced && !isSlicing && (
+          <motion.div 
+            className="absolute -bottom-16 left-1/2 transform -translate-x-1/2 text-center"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 0.8, y: 0 }}
+            transition={{ duration: 0.8, delay: 2 }}
+          >
             <motion.p 
-              className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 font-body text-muted-taupe text-sm whitespace-nowrap"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.7 }}
-              transition={{ duration: 0.8, delay: 2.5 }}
+              className="font-body text-muted-taupe text-sm sm:text-base"
+              animate={{ opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 2, repeat: Infinity }}
             >
-              Tap to slice
+              Tap or swipe the cake to slice it! 🍰
             </motion.p>
-          )}
-        </motion.div>
+          </motion.div>
+        )}
       </div>
 
       {/* Confetti */}
