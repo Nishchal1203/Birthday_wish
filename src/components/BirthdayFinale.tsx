@@ -32,13 +32,13 @@ export function BirthdayFinale() {
 
   return (
     <div 
-      className="min-h-screen bg-creamy-white flex flex-col items-center justify-center p-8 relative overflow-hidden"
+      className="min-h-screen bg-creamy-white flex flex-col items-center justify-center p-4 sm:p-8 relative overflow-hidden"
       onError={() => setHasError(true)}
     >
       {/* Background decorative elements */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Floating sparkles */}
-        {Array.from({ length: 20 }).map((_, i) => (
+        {Array.from({ length: 8 }).map((_, i) => (
           <motion.div
             key={i}
             className="absolute w-1 h-1 bg-soft-gold rounded-full"
@@ -86,8 +86,8 @@ export function BirthdayFinale() {
       </div>
 
       {/* Main Birthday Message */}
-      <div className="text-center mb-16 relative z-10">
-        <motion.h1 className="font-heading text-charcoal-grey text-5xl md:text-6xl lg:text-7xl">
+      <div className="text-center mb-8 sm:mb-16 relative z-10 px-4">
+        <motion.h1 className="font-heading text-charcoal-grey text-2xl sm:text-3xl md:text-4xl lg:text-6xl xl:text-7xl">
           {birthdayText.split('').map((char, i) => (
             <motion.span
               key={i}
@@ -136,7 +136,7 @@ export function BirthdayFinale() {
 
       {/* Parchment with Personal Message */}
       <motion.div
-        className="relative max-w-2xl mx-auto"
+        className="relative max-w-xs sm:max-w-md md:max-w-lg lg:max-w-2xl mx-auto px-4"
         initial={{ opacity: 0, scale: 0.8, rotateX: -30 }}
         animate={showParchment ? { 
           opacity: 1, 
@@ -147,7 +147,7 @@ export function BirthdayFinale() {
       >
         {/* Parchment background */}
         <div className="relative">
-          <div className="w-full max-w-2xl h-80 bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg shadow-2xl border-2 border-yellow-200 relative overflow-hidden">
+          <div className="w-full h-64 sm:h-72 md:h-80 bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg shadow-2xl border-2 border-yellow-200 relative overflow-hidden">
             {/* Parchment texture */}
             <div className="absolute inset-0 opacity-30">
               <div className="w-full h-full bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-lg"></div>
@@ -161,15 +161,15 @@ export function BirthdayFinale() {
           </div>
 
           {/* Message text overlay */}
-          <div className="absolute inset-8 flex items-center justify-center p-4">
+          <div className="absolute inset-4 sm:inset-6 md:inset-8 flex items-center justify-center p-2 sm:p-4">
             <motion.div 
-              className="w-full max-w-md"
+              className="w-full"
               initial={{ opacity: 0 }}
               animate={showParchment ? { opacity: 1 } : {}}
               transition={{ duration: 2, delay: 0.5 }}
             >
               <motion.p
-                className="font-script text-charcoal-grey text-lg md:text-xl text-center leading-relaxed break-words"
+                className="font-script text-charcoal-grey text-sm sm:text-base md:text-lg lg:text-xl text-center leading-relaxed break-words hyphens-auto"
                 initial={{ opacity: 0 }}
                 animate={showParchment ? { opacity: 1 } : {}}
                 transition={{ duration: 1, delay: 1.5 }}
@@ -196,12 +196,12 @@ export function BirthdayFinale() {
 
           {/* Signature area */}
           <motion.div 
-            className="absolute bottom-4 right-8"
+            className="absolute bottom-2 right-4 sm:bottom-4 sm:right-8"
             initial={{ opacity: 0 }}
             animate={showParchment ? { opacity: 1 } : {}}
             transition={{ duration: 1, delay: 4 }}
           >
-            <p className="font-script text-muted-taupe text-lg">
+            <p className="font-script text-muted-taupe text-xs sm:text-sm md:text-lg">
               With all my love and wishes ❤️ Nischal
             </p>
           </motion.div>
@@ -232,7 +232,7 @@ export function BirthdayFinale() {
 
       {/* Final decorative flourish */}
       <motion.div 
-        className="mt-12 text-6xl"
+        className="mt-6 sm:mt-12 text-3xl sm:text-4xl md:text-6xl"
         initial={{ opacity: 0, scale: 0 }}
         animate={showParchment ? { 
           opacity: 1, 

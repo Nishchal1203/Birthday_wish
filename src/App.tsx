@@ -1,10 +1,13 @@
+import React, { Suspense, lazy } from "react";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { GiftBoxInvitation } from "./components/GiftBoxInvitation";
-import { PhotoGallery } from "./components/PhotoGallery";
-import { FlowerSurprise } from "./components/FlowerSurprise";
-import { InteractiveCake } from "./components/InteractiveCake";
-import { BirthdayFinale } from "./components/BirthdayFinale";
+
+// Lazy load components for better performance
+const PhotoGallery = lazy(() => import("./components/PhotoGallery").then(module => ({ default: module.PhotoGallery })));
+const FlowerSurprise = lazy(() => import("./components/FlowerSurprise").then(module => ({ default: module.FlowerSurprise })));
+const InteractiveCake = lazy(() => import("./components/InteractiveCake").then(module => ({ default: module.InteractiveCake })));
+const BirthdayFinale = lazy(() => import("./components/BirthdayFinale").then(module => ({ default: module.BirthdayFinale })));
 
 type Screen = 'invitation' | 'gallery' | 'flower' | 'cake' | 'finale';
 
@@ -63,13 +66,45 @@ export default function App() {
       case 'invitation':
         return <GiftBoxInvitation onOpen={handleGiftBoxOpen} />;
       case 'gallery':
-        return <PhotoGallery onComplete={handleGalleryComplete} />;
+        return (
+          <Suspense fallback={
+            <div className="flex items-center justify-center min-h-screen">
+              <div className="w-8 h-8 border-4 border-dusty-rose border-t-soft-gold rounded-full animate-spin"></div>
+            </div>
+          }>
+            <PhotoGallery onComplete={handleGalleryComplete} />
+          </Suspense>
+        );
       case 'flower':
-        return <FlowerSurprise onVideoReveal={handleVideoReveal} onComplete={handleFlowerComplete} />;
+        return (
+          <Suspense fallback={
+            <div className="flex items-center justify-center min-h-screen">
+              <div className="w-8 h-8 border-4 border-dusty-rose border-t-soft-gold rounded-full animate-spin"></div>
+            </div>
+          }>
+            <FlowerSurprise onVideoReveal={handleVideoReveal} onComplete={handleFlowerComplete} />
+          </Suspense>
+        );
       case 'cake':
-        return <InteractiveCake onSliced={handleCakeSliced} />;
+        return (
+          <Suspense fallback={
+            <div className="flex items-center justify-center min-h-screen">
+              <div className="w-8 h-8 border-4 border-dusty-rose border-t-soft-gold rounded-full animate-spin"></div>
+            </div>
+          }>
+            <InteractiveCake onSliced={handleCakeSliced} />
+          </Suspense>
+        );
       case 'finale':
-        return <BirthdayFinale />;
+        return (
+          <Suspense fallback={
+            <div className="flex items-center justify-center min-h-screen">
+              <div className="w-8 h-8 border-4 border-dusty-rose border-t-soft-gold rounded-full animate-spin"></div>
+            </div>
+          }>
+            <BirthdayFinale />
+          </Suspense>
+        );
       default:
         return <GiftBoxInvitation onOpen={handleGiftBoxOpen} />;
     }

@@ -1,3 +1,4 @@
+import React from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useState } from "react";
 
@@ -27,12 +28,12 @@ export function FlowerSurprise({ onVideoReveal, onComplete }: FlowerSurpriseProp
   };
 
   return (
-    <div className="min-h-screen bg-creamy-white flex flex-col items-center justify-center p-8 relative">
+    <div className="min-h-screen bg-creamy-white flex flex-col items-center justify-center p-4 sm:p-8 relative">
       <AnimatePresence>
         {!showVideo && (
           <>
             <motion.p 
-              className="font-body text-muted-taupe mb-12 text-center text-xl"
+              className="font-body text-muted-taupe mb-8 sm:mb-12 text-center text-lg sm:text-xl px-4"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
@@ -48,10 +49,10 @@ export function FlowerSurprise({ onVideoReveal, onComplete }: FlowerSurpriseProp
               whileTap={!isClicked ? { scale: 0.95 } : {}}
             >
               <svg 
-                width="200" 
-                height="200" 
+                width="150" 
+                height="150" 
                 viewBox="0 0 200 200" 
-                className="drop-shadow-2xl"
+                className="drop-shadow-2xl sm:w-[200px] sm:h-[200px]"
               >
                 {/* Stem */}
                 <motion.path
@@ -221,7 +222,7 @@ export function FlowerSurprise({ onVideoReveal, onComplete }: FlowerSurpriseProp
       <AnimatePresence>
         {showVideo && (
           <motion.div
-            className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4"
+            className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-2 sm:p-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

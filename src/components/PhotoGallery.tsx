@@ -1,5 +1,5 @@
+import React, { useState, useMemo, memo } from "react";
 import { motion } from "motion/react";
-import { useState } from "react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 
 interface Photo {
@@ -12,14 +12,14 @@ interface PhotoGalleryProps {
   onComplete: () => void;
 }
 
-export function PhotoGallery({ onComplete }: PhotoGalleryProps) {
+export const PhotoGallery = memo(function PhotoGallery({ onComplete }: PhotoGalleryProps) {
   const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null);
   
-  const photos: Photo[] = [
+  const photos: Photo[] = useMemo(() => [
     {
       id: 1,
       url: "/images/Photo1.svg",
-      caption: "That day we couldn't stop laughing"
+      caption: "As always with you"
     },
     {
       id: 2,
@@ -36,16 +36,14 @@ export function PhotoGallery({ onComplete }: PhotoGalleryProps) {
       url: "/images/Photo4.svg",
       caption: "Adventures and fun times"
     }
-  ];
+  ], []);
 
-  // Floating balloons for background animation
-  const balloons = Array.from({ length: 6 }, (_, i) => ({
-    id: i,
-    left: Math.random() * 100,
-    delay: Math.random() * 2,
-    size: 20 + Math.random() * 20,
-    color: i % 2 === 0 ? 'bg-dusty-rose' : 'bg-soft-gold'
-  }));
+  // Floating balloons for background animation - memoized for performance
+  const balloons = useMemo(() => [
+    { id: 0, left: 20, delay: 0, size: 25, color: 'bg-dusty-rose' },
+    { id: 1, left: 50, delay: 1, size: 30, color: 'bg-soft-gold' },
+    { id: 2, left: 80, delay: 2, size: 28, color: 'bg-dusty-rose' }
+  ], []);
 
   return (
     <div className="min-h-screen bg-creamy-white relative overflow-hidden">
@@ -53,7 +51,7 @@ export function PhotoGallery({ onComplete }: PhotoGalleryProps) {
       {balloons.map((balloon) => (
         <motion.div
           key={balloon.id}
-          className={`fixed w-${balloon.size} h-${balloon.size} ${balloon.color} rounded-full opacity-20 pointer-events-none`}
+          className={`fixed ${balloon.color} rounded-full opacity-20 pointer-events-none`}
           style={{
             left: `${balloon.left}%`,
             width: `${balloon.size}px`,
@@ -62,10 +60,10 @@ export function PhotoGallery({ onComplete }: PhotoGalleryProps) {
           initial={{ y: '100vh' }}
           animate={{ y: '-100vh' }}
           transition={{
-            duration: 15 + Math.random() * 10,
+            duration: 15 + balloon.id * 2,
             delay: balloon.delay,
             repeat: Infinity,
-            repeatDelay: Math.random() * 5,
+            repeatDelay: balloon.id * 1.5,
             ease: 'linear'
           }}
         />
@@ -73,7 +71,7 @@ export function PhotoGallery({ onComplete }: PhotoGalleryProps) {
 
       <div className="relative z-10 pt-16 pb-32">
         <motion.h2 
-          className="font-heading text-charcoal-grey text-center mb-16 text-3xl md:text-4xl lg:text-5xl px-8"
+          className="font-heading text-charcoal-grey text-center mb-8 sm:mb-16 text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl px-4 sm:px-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
@@ -82,15 +80,15 @@ export function PhotoGallery({ onComplete }: PhotoGalleryProps) {
         </motion.h2>
 
         {/* Photo Timeline */}
-        <div className="space-y-24 px-8">
+        <div className="space-y-12 sm:space-y-16 md:space-y-24 px-4 sm:px-8">
           {photos.map((photo, index) => (
             <motion.div
               key={photo.id}
-              className={`flex ${index % 2 === 0 ? 'justify-start md:justify-end' : 'justify-end md:justify-start'} relative`}
+              className={`flex justify-center sm:justify-start md:${index % 2 === 0 ? 'justify-end' : 'justify-start'} relative`}
               initial={{ 
                 opacity: 0, 
-                x: index % 2 === 0 ? -100 : 100,
-                rotate: index % 2 === 0 ? -5 : 5
+                x: 0,
+                rotate: 0
               }}
               whileInView={{ 
                 opacity: 1, 
@@ -185,4 +183,4 @@ export function PhotoGallery({ onComplete }: PhotoGalleryProps) {
       )}
     </div>
   );
-}
+});
